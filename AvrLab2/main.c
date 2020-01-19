@@ -3,8 +3,8 @@
 // Program template for lab 7
 // Please fill in this information before starting coding
 // Authors:
-//		Rzepka Micha³
-//		Wa¿ny £ukasz
+//		Rzepka Michaï¿½
+//		Waï¿½ny ï¿½ukasz
 //		Wolny Dominik
 //
 // Group:	1
@@ -75,13 +75,12 @@ ISR(TIMER1_OVF_vect){
 	overflowCounter--;
 	
 	//blink LED's on PORTC when the timer hits the preset amount of overflows
-	// !!! CHANGE TO PORTC in lab
 	if(overflowCounter == 0){
 		
-		if(PORTD != 0x00)
-			PORTD = 0x00;
+		if(PORTC != 0x00)
+			PORTC = 0x00;
 		else
-			PORTD = 0xFF;
+			PORTC = 0xFF;
 	}
 	
 	//reset the timer register value
@@ -100,17 +99,19 @@ int main (void)
 	//PORTA=0xFF;
 	//    port C as output and initial value FF
 	
+	DDRA = 0x00;
 	
-	// !!! SET PORTA as input in lab
+	//turn on internal pull-ups if none external are present
+	if(PINA != 0xFF){
+		PORTA = 0xFF;
+	}
 	
 	DDRB=0xFF;
 	PORTB=0x00;
 	
 	DDRC=0xFF;
 	PORTC=0xFF;
-	
-	DDRD = 0xFF;
-	PORTD = 0xFF;
+
 	//
 	// Writing a logic one to PINxn toggles the value of PORTxn, independent on the value of DDRxn
 	// Note that the SBI instruction can be used to toggle one single bit in a port.
@@ -131,12 +132,11 @@ int main (void)
 	
 	while(1)
 	{
-		if(PORTB != 0xFF) { // !!! CHANGE TO PORT A when in laboratory
+		if(PINA != 0xFF) {
 			
 			if (iRAM < nLength) {
 				
-				// !!! CHANGE TO "pgm_read_word_far(pgm_get_far_address(TAB_ROM)" + iROM) when in laboratory
-				if (0x0000 == pgm_read_word(pgm_get_far_address(TAB_ROM) + iROM)) {
+				if (0x0000 == pgm_read_word_far(pgm_get_far_address(TAB_ROM) + iROM)) {
 					
 					iROM = 0;
 				
@@ -149,8 +149,7 @@ int main (void)
 					continue;
 				}
 				
-				// !!! CHANGE TO "pgm_read_word_far(pgm_get_far_address(TAB_ROM)" + iROM) when in laboratory
-				TAB_RAM[iRAM] = pgm_read_byte(pgm_get_far_address (TAB_ROM) + iROM);
+				TAB_RAM[iRAM] = pgm_read_byte_far(pgm_get_far_address (TAB_ROM) + iROM);
 				iROM++;
 				iRAM++;
 				
